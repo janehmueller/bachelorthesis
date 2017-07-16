@@ -1,0 +1,22 @@
+% (1 Seite)
+\section{Related Work (1 Seite)}
+Einmal Paper zu NER citen und kurz sagen was sie machen und dann auch zu NEL (u.a. CohEEL). Dann sagen was wir anders machen.
+
+
+	\subsection*{Alias Generation to Improve Company Recognition in Text}
+	\begin{itemize}
+		\item ähnliches Ziel (NEL von Unternehmen)
+		\item arbeitet mit dem "Wortstamm" der Aliase
+		\item kann so auch nicht bekannte Vorkommen eines Unternehmensaliases finden
+		\item dadurch ist Disambiguierung aber schwieriger, da z.B. Unternehmensformen aus dem Namen entfernt werden
+		\item (eventuell gab es keine Disambiguierung?)
+	\end{itemize}
+
+	\subsection*{CohEEL}
+	\begin{itemize}
+		\item nur NEL und kein NER
+		\item benutzt Seed und Candidate Alignments und kombiniert diese mit JNE (und Random Walks)
+		\item benutzt sehr ähnliche first order features
+		\item benutzt die selben higher order features
+		\item läuft auch verteilt (Flink)
+	\end{itemize}

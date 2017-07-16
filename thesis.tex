@@ -1,0 +1,112 @@
+\documentclass[a4paper, titlepage, parskip]{scrartcl} 
+% Format A4, mit Titelseite, mit Durchschuss (= Abstand zwischen Absätzen, statt Einrückung)
+% KOMA-Script Grundklasse     texdoc scrguide
+
+% Englisch mit Schriftkodierung mit Umlauten
+\usepackage[USenglish]{babel}
+\usepackage[T1]{fontenc}
+
+% Mathematische Symbole etc.
+\usepackage{textcomp,amsmath,amssymb}
+
+% Standard Graphik Paket
+\usepackage{graphicx}
+
+% kann UTF-8 source lesen
+\usepackage[utf8]{inputenc}
+
+% Definition environment
+\usepackage{amsthm} 
+\theoremstyle{plain}
+\newtheorem{definition}{Definition}
+\theoremstyle{definition}
+\newtheorem{quotecaption}{Quote}
+% force figures inline with [H]
+% \usepackage{float}
+
+% highlight text
+% \usepackage{xcolor}
+
+% cite in italics
+\newcommand*{\itcite}[1]{\glqq\textit{#1}\grqq} 
+
+% center without vertical spacw
+\newenvironment{nscenter}
+ {\parskip=0pt\par\nopagebreak\centering}
+ {\par\noindent\ignorespacesafterend}
+
+% bibtex
+\usepackage{url}
+\bibliographystyle{plaindin}      % BibTeX Styles nach Norm DIN 1505
+
+% Abstract Breite
+% https://tex.stackexchange.com/questions/151583/how-to-adjust-the-width-of-abstract
+\renewenvironment{abstract}[1]
+ {\small
+  \begin{center}
+  \bfseries #1\vspace{-.6em}\vspace{0pt}
+  \end{center}
+  \list{}{
+    \setlength{\leftmargin}{.6cm}%
+    \setlength{\rightmargin}{\leftmargin}%
+  }%
+  \item\relax}
+ {\endlist}
+
+% Unterschriftzeile
+% https://tex.stackexchange.com/questions/183698/signature-line-with-dots-and-name-below
+\newcommand{\sign}[1]{
+  \begin{tabular}[t]{@{}l@{}}
+  \makebox[2.5in]{\dotfill}\\
+  \strut#1\strut
+  \end{tabular}
+}
+
+% Titelseite
+\titlehead{
+\includegraphics{img/hpi_logo_cmyk_wb_sl2}
+} \subject{Bachelor Thesis}
+\title{Evaluation of Entity Linking Models on Business Data
+\\ \bigskip 
+\large{Evaluierung von Entitätsverknüpfungsmodellen auf Unternehmensdaten}}
+\author{Jan Ehmüller\\{\small{\url{jan@ehmueller.de}}}}
+\date{\today}
+\publishers{
+Information Systems Group\\
+~\\
+\textbf{Supervisors}\\
+Prof. Dr. Felix Naumann\\
+Toni Grütze\\
+Michael Loster}
+
+\begin{document}
+\maketitle
+
+\newpage
+\include{sections/abstract}
+\newpage
+%{\small\tableofcontents}
+\tableofcontents
+\addtocontents{toc}{\setcounter{tocdepth}{2}}
+\newpage
+\include{sections/01}
+\newpage
+\include{sections/02}
+\newpage
+\include{sections/03}
+\newpage
+\include{sections/04}
+\newpage
+\include{sections/05}
+\newpage
+\include{sections/06}
+\newpage
+\include{sections/07}
+\newpage
+\include{sections/references}
+\newpage
+\include{sections/glossary}
+\newpage
+\include{sections/statutory_declaration}
+
+\end{document}

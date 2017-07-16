@@ -1,0 +1,14 @@
+% (1 Seite)
+\section{Ambiguous Business Aliases}
+This thesis is published in the context of a project with the goal to create a graph of Germany's corporate landscape. Businesses represent the graph's nodes and the relationships between businesses represent the edges. Information about businesses are extracted from structured knowledge bases such as Wikidata and DBpedia. This information describes the businesses themselves but contains barely anything about the relationships between them. These relationships are described in unstructured texts like Wikipedia or newspaper articles.\\
+To extract a relationship between two businesses we must first find mentions of both businesses in a sentence. Finding these mentions of businesses is called \textit{Named Entity Recognition} (NER). We must then link the mentions of the businesses to entities in our knowledge base. This step is called \textit{Named Entity Linking} (NEL). The last step is to extract the relationship between the two businesses from the sentence, which is called \textit{Relation Extraction}.\\
+We combine the NER and NEL into a single step and transform it into a classification problem. Janetzki \cite{janetzki} describes the creation of our knowledge base and the extraction of features used to classify mentions, I evaluate the quality of the features and different classification models and Schneider \cite{schneider} describes and evaluates different Relation Extraction methods.\par
+This thesis describes the training and testing of different classification models using the German Wikipedia as knowledge base. It will then evaluate the quality of these models and of the features described by Janetzki \cite{janetzki} and finally discuss the quality, performance and usability of the NEL on newspaper articles. The focus lies in the reliability, i.e. precision, and performance of the NEL so that we can process millions of documents in merely a few hours or days.
+
+% \newpage
+% \begin{itemize}
+% 	\item wollen Unternehmensnennungen in Fließtexten finden um aus diesen Sätzen Relationen zwischen Unternehmen zu extrahieren (Alec)
+% 	\item dafür müssen wir Nennungen von Unternehmen in Fließtexten Finden (NER, Trie + Wikipedia/Wikidata)
+% 	\item die möglichen Alignments zu jeder gefundenen Mention klassifizieren (Klassifikationsproblem)
+% 	\item hier schon die Begriffe NER und NEL erklären?
+% \end{itemize}

@@ -1,0 +1,29 @@
+\section{Evaluation of the Classifier Models (3 Seiten)}
+\begin{itemize}
+	\item Evaluierungsmaß erklären\\
+	Precision, Recall, F1-Score\\
+	Precision mit bezug auf Mentions mit mehreren Alignments: $\frac{\text{Mentions mit mehreren Alignments}}{TP + FP}$
+	\item aufzählen welche Classifier getesten werden:\\
+	Naive Bayes, Random Forest, Logistic Regression, Gradient-Boosted Trees, Support Vector Machines
+\end{itemize}
+	\subsection{Classifier training and testing}
+	\begin{itemize}
+		\item Artikel von Unternehmen als Basis
+		\item generieren Dateneinträge aus Wikipedia Links im Text, Extended Links und Trie Hits
+		\item Simple Split (70/30) (bzw. noch mit Cross Validation machen)
+		\item erwähnen dass RDD-API und DF-API der Spark ML andere Ergebnisse liefern
+		\item (Standard Parameter der Spark ML erwähnen?)
+	\end{itemize}
+
+	\subsection{Naive Bayes}
+	\begin{itemize}
+		\item nicht gut, da die Features nicht unabhängig voneinander sind
+	\end{itemize}
+	\subsection{Random Forest}
+	\begin{itemize}
+		\item erklären was man bei den Parametern (max Bins, max Depth, num Trees) erwarten
+		\item hat sich nicht viel geändert
+		\item Threshold Statistik zeigen für Seed und Candidate Alignments
+	\end{itemize}
+	\subsection{Logistic Regression}
+	\subsection{Gradient-Boosted Trees}
