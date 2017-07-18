@@ -8,9 +8,16 @@
 
 % Mathematische Symbole etc.
 \usepackage{textcomp,amsmath,amssymb}
+\newcommand\abs[1]{\left|#1\right|}
 
 % Standard Graphik Paket
 \usepackage{graphicx}
+
+% add unnumbered sections to toc
+\usepackage{hyperref}
+
+% adds floating figure environments
+\usepackage{float}
 
 % kann UTF-8 source lesen
 \usepackage[utf8]{inputenc}
@@ -21,11 +28,6 @@
 \newtheorem{definition}{Definition}
 \theoremstyle{definition}
 \newtheorem{quotecaption}{Quote}
-% force figures inline with [H]
-% \usepackage{float}
-
-% highlight text
-% \usepackage{xcolor}
 
 % cite in italics
 \newcommand*{\itcite}[1]{\glqq\textit{#1}\grqq} 
@@ -89,6 +91,8 @@ Michael Loster}
 \tableofcontents
 \addtocontents{toc}{\setcounter{tocdepth}{2}}
 \newpage
+\include{sections/00}
+\newpage
 \include{sections/01}
 \newpage
 \include{sections/02}
@@ -104,8 +108,8 @@ Michael Loster}
 \include{sections/07}
 \newpage
 \include{sections/references}
-\newpage
-\include{sections/glossary}
+% \newpage
+% \include{sections/glossary}
 \newpage
 \include{sections/statutory_declaration}
 

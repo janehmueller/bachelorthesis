@@ -1,5 +1,6 @@
 % (2-3 Seiten)
 \section{Named Entity Linking}
+\label{sec:NEL}
 This section describes the classification problem combining both NER and NEL and its solution. Given an input text all mentions of businesses should be recognized and linked to the correct business while other mentions of named entities should be ignored. Quote \ref{quote1} shows two example sentences about automobile businesses. Only the bold named entities are businesses and should be linked to entities in the knowledge base. Usual NER approaches however (needs citation) recognize all named entities, which in this example are businesses as well as non-businesses. Since the linked entities are used to extract relationships between businesses they must only be businesses. To solve this problem a classifier is trained using the German Wikipedia and its hand annotated links as knowledge base. The following sections describe the how the classifier is trained and how it is then used to annotate documents.\\
 \begin{nscenter}
 	\fbox{\parbox[c][74pt]{\textwidth}{Sechs Top-Manager von \textbf{GM}, darunter \underline{Robert A. Lutz} sowie \underline{Carl-Peter Forster}, welcher als Group Vice President für das Europageschäft zuständig ist, trennten sich Anfang Mai 2009 von ihren gesamten Anteilsscheinen.\\PSA-Chef \underline{Carlos Tavares} hatte zugesagt, \textbf{Opel} als deutsches Unternehmen zu erhalten. Er hatte aber zugleich angekündigt, \textbf{Opel} müsse sich im Fall einer Übernahme durch \textbf{PSA} weitgehend aus eigener Kraft sanieren.}}
@@ -13,30 +14,29 @@ This section describes the classification problem combining both NER and NEL and
 The German Wikipedia has around 3.6 million pages and around 38 million links occurring in the text. Only a fraction of these contain relevant data which would be useful to train a classifier to link business entities. To reduce this massive amount of data to a smaller, more relevant dataset the links are filtered with the help of Wikidata. Wikidata is a structured knowledge base derived of Wikipedia. Using its ontology with the pages in Wikipedia can be reduced to only the pages about businesses. Let $W$ be the set of all Wikipedia pages and $W_{business} = \{ P \in W | P \text{ is tagged as business in Wikidata} \}$.
 \begin{definition}
 A \textbf{link} l = (P,i,a,P') is the textual occurrence of an alias a in position i within Wikipedia page P and linking to the Wikipedia page P'.
+\label{link}
 \end{definition}
-Using this smaller set of business pages the relevant links can be reduced as well. Let $L$ be the set of all links occurring in Wikipedia and $L_{business} = \{ l = (P,i,a,P') \in L | P' \in W_{business} \}$. Using this smaller set of links pointing to the pages of businesses the possible aliases of businesses can be extracted. Let $A$ be the set of all aliases links in Wikipedia have and $A_{business} = \{ a \in A | \exists l \in L_{business}: l \text{ has alias } a \}$. Next $L_{business}$ is expanded by selecting every link with an alias that has the possibility to link to a business. These links $L'_{business} = \{ l \in L | \exists a \in A_{business}: l \text{ has alias } a \}$ comprise the relevant links that will be used to train the classifier.\\
-Due to the readability of the Wikipedia pages, however, there are two issues with these links: the mention of an entity on its own page is not linked to the page and usually only the first occurrence of an entity's mention is linked. To solve these two issues the links on a given Wikipedia page P need to be extended.
-First all links occurring on page p are extracted into the set $L_P = \{ l \in L'_{business} | l \text{ occurs on page } P\}$. These links are then used to creating the set $P_P = \{ P' \in W | \exists l \in L_P: l \text{ links to page } P' \} \cup \{P\}$ containing all pages mentioned on page P and the page itself. Using $P_P$ all links linking to these pages are aggregated into $L'_P = \{ l \in L'_{business} | \exists P' \in P_P: l \text{ links to } P' \}$.\\
-The aliases $A_P = \{a \in A_{business} | \exists l \in L'_P: l \text{ has alias } a \}$ are tokenized and these tokens are used to create a trie. In this trie each leaf represents a token of an alias. For example the alias \itcite{Volkswagen AG} would be represented by the leaves \itcite{Volkswagen} and \itcite{AG}. With this trie all occurrences of the aliases $A_P$ on page $P$ are found and transformed into extended links $LE_P = \{ l_e = (P, i, a, W_a) | a \in A_P \land a \text{ occurs on page } P \text{ in position } i \land \nexists l \in L_P: l \text{ occurs in position } i \}$.
+Using this smaller set of business pages the relevant links can be reduced as well. Let $L$ be the set of all links occurring in Wikipedia and $L_{business} = \{ l = (P,i,a,P') \in L | P' \in W_{business} \}$. Using this smaller set of links pointing to the pages of businesses the possible aliases of businesses can be extracted. Let $A$ be the set of all aliases links in Wikipedia have and $A_{business} = \{ a \in A | \exists l \in L_{business}: l \text{ has alias } a \}$. Next $L_{business}$ is expanded by selecting every link with an alias that has the possibility to link to a business. These links $L'_{business} = \{ l \in L | \exists a \in A_{business}: l \text{ has alias } a \}$ comprise the relevant links that will be used to train the classifier.\par
+Due to the readability of the Wikipedia pages, however, there are two issues with these links: the mention of an entity on its own page is not linked to the page and usually only the first occurrence of an entity's mention is linked. To solve these two issues the links on a given Wikipedia page P need to be extended. First all links occurring on page p are extracted into the set $L_P = \{ l \in L'_{business} | l \text{ occurs on page } P\}$. These links are then used to creating the set $P_P = \{ P' \in W | \exists l \in L_P: l \text{ links to page } P' \} \cup \{P\}$ containing all pages mentioned on page P and the page itself. Using $P_P$ all links linking to these pages are aggregated into $L'_P = \{ l \in L'_{business} | \exists P' \in P_P: l \text{ links to } P' \}$. The aliases $A_P = \{a \in A_{business} | \exists l \in L'_P: l \text{ has alias } a \}$ are tokenized and these tokens are used to create a trie. In this trie each leaf represents a token of an alias. For example the alias \itcite{Volkswagen AG} would be represented by the leaves \itcite{Volkswagen} and \itcite{AG}. With this trie all occurrences of the aliases $A_P$ on page $P$ are found and transformed into extended links $LE_P = \{ l_e = (P, i, a, W_a) | a \in A_P \land a \text{ occurs on page } P \text{ in position } i \land \nexists l \in L_P: l \text{ occurs in position } i \}$.
 \begin{definition}
 An \textbf{extended link} $l_e$ = (P,i,a,$W_a$) is the textual occurrence of an alias a in position i within Wikipedia page P and possibly linking to the Wikipedia pages $W_a = \{ P' \in W | \exists l \in L: l \text{ links to page } P' \land l \text{ has alias } a \}$.
+\label{extendedlink}
 \end{definition}
 These extended links are then transformed into actual links $LE'_P$ extending $L_P$ by applying a partial function $f_{LE}$.
 This function transforms an extended link $l_e = (P,i,a,W_a)$ into a link $l = (P,i,a,P')$ if and only if $W_a$ has only a single element $P'$ or there is only one page $P' \in W_a$ for which there are at least two links with alias $a$ and these links make out at least 90\% of all links pointing to $P'$. $L_{P_{positive}} = LE'_P \cup L_P$ then makes up all the links on page $P$ used for the classifier training.\par
 The links in $L_{P_{positive}}$ all represent true annotations. But the classifier is also supposed to disambiguate true annotations and false, non-business, ones, as seen in Quote \ref{quote1}. Thus the training set needs to be extended by false annotations. These are found by searching for the occurrences of known aliases on Wikipedia page P which were not linked by a human. The assumption is that since these entities were not linked by a human that they are false in this context.
 \begin{definition}
 A \textbf{trie alias} t = (P,i,a) is the textual occurrence of an alias a in position i within Wikipedia page P found by using a trie of known aliases.
+\label{triealias}
 \end{definition}
-These occurrences are found by creating a trie from the tokenized aliases in $A_{business}$ which is then used to find re-occurrences of known aliases. In case of overlapping occurrences only the longest occurrence is used. An example for such an overlap would be the sentence \itcite{Die Audi AG sitzt in Ingolstadt.}. Here the trie would find occurrences of both \itcite{Audi} and \itcite{Audi AG} but only the longest occurrence will be considered. The found aliases are then filtered by removing stop words and symbols as they d
-
-These trie aliases make up the set $L_{P_{negative}} = \{ t = (P,i,a) | a \text{ occurs on page } P \text{ in position i } \land \nexists l \in L_{P_{positive}}: l \text{ occurs in position } i \}$ containing the false annotations on page P.\par
-To train the classifier the links and trie aliases of the small subset of Wikipedia pages $W_{business}$ is used. Every link in $L_{P_{positive}}$ and every trie alias in $L_{P_{negative}}$ is transformed into a number of feature entries.\\
-The possible pages a given alias a can point to are $P_a = \{ P \in W | \exists l \in L_{business}: l \text{ has alias } a \land l \text{ points to page } P \}$.
+These occurrences are found by creating a trie from the tokenized aliases in $A_{business}$ which is then used to find re-occurrences of known aliases. In case of overlapping occurrences only the longest occurrence is used. An example for such an overlap would be the sentence \itcite{Die Audi AG sitzt in Ingolstadt.}. Here the trie would find occurrences of both \itcite{Audi} and \itcite{Audi AG} but only the longest occurrence will be considered. These trie aliases make up the set $L_{P_{negative}} = \{ t = (P,i,a) | a \text{ occurs on page } P \text{ in position i } \land \nexists l \in L_{P_{positive}}: l \text{ occurs in position } i \}$ containing the false annotations on page P.\par
+The number of trie aliases found is several times higher than the number of links and extended links per page. This can cause problems if there are so many more false annotations that the classifier just classifies every entry as wrong because it is still right in over 99\% of the cases. The approach used to reduce the number of trie aliases is to remove stop words and symbols because they will be almost never used to refer to businesses in newspaper articles.\par
+To train the classifier the links and trie aliases of the small subset of Wikipedia pages $W_{business}$ are used. Every link in $L_{P_{positive}}$ and every trie alias in $L_{P_{negative}}$ is transformed into a number of feature entries. The possible pages a given alias $a$ can point to are $P_a = \{ P \in W | \exists l \in L_{business}: l \text{ has alias } a \land l \text{ points to page } P \}$.
 \begin{definition}
 A \textbf{feature entry} $f_e$ = (P,i,a,P',F) represents an alias occurring on Wikipedia page P in position i and possibly pointing to a Wikipedia page P' with a set of generated features F used to train a classifier.
+\label{featureentry}
 \end{definition}
-This set of features $F$ contains three first order features and six higher order features as described by Janetzki \cite{janetzki}. These first order features are the link score, the page score and the link context score. Given a feature entry $f_e = (P,i,a,P',F)$, the link score signifies how likely it is, that the alias a links to any page. It is therefore the same for every feature entry generated from one link or trie alias. The page score represents the likelihood that given the alias a links to any page links specifically to page P'. The link context score shows the similarity of the words around alias a on page P in position i to the words on page P'.\\
-Because the link score is equal for all feature entries generated from one link or trie alias, the higher order features are only generated for the page score and the link context score. They are as described by Grütze et. al \cite{coheel} the rank, $\Delta top$ and $\Delta succ$.\\
+This set of features $F$ contains three first order features and six higher order features as described by Janetzki \cite{janetzki}. These first order features are the link score, the page score and the link context score. Given a feature entry $f_e = (P,i,a,P',F)$, the link score signifies how likely it is, that the alias $a$ links to any page. It is therefore the same for every feature entry generated from one link or trie alias. The page score represents the likelihood that given the alias a links to any page links specifically to page P'. The link context score shows the similarity of the words around alias a on page P in position i to the words on page P'. Because the link score is equal for all feature entries generated from one link or trie alias, the higher order features are only generated for the page score and the link context score. They are as described by Grütze et al. \cite{coheel} the rank, $\Delta top$ and $\Delta succ$. They describe the relation between the feature entries generate by a single link or trie alias. The rank is an integer ranking of the values of the feature, which is defined by the partial order $\geq$. This means that the highest value of the feature has the lowest and best rank of 1 while the lowest value has the worst rank of $n$, with $n$ being the number of feature entries generated for a specific link or trie alias. $\Delta top$ describes the difference of the current feature entry to the one with rank 1. In case of the feature entry with rank 1 its value is $\infty$. $\Delta succ$ describes the difference to the feature entry with the next higher (worse) rank. In case of the worst feature entry with rank $n$ its value is also $\infty$.\par
 Around 545 million feature entries containing these features were used to train the classifier. Different classification models will be evaluated in section 4 and the first and higher order features will be evaluated in section 5.
 	% \begin{itemize}
 	% 	\item trainieren auf den Links in der Wikipedia
@@ -46,24 +46,22 @@ Around 545 million feature entries containing these features were used to train 
 	% \end{itemize}
 
 \subsection{Annotation of Newspaper Articles}
-Text 1234\par
-
-
-	\begin{itemize}
-		\item finden mögliche Aliase einer Entität über die Wikipedialinks (Wikipedia = Knowledge Base)
-		\item filtern Wikipedia Entitäten anhand der Wikidata Ontologie auf Unternehmen
-		\item suchen nach allen Vorkommen aller Aliase/Mentions dieser Unternehmen in Fließtexten anhand eines Prefix-Trees (Trie)\\
-		(Trie eventuell noch genauer erläutern?)
-		\item entfernen Stopwords und Symbole
-		\item für jedes Mention gucken wir uns an welche Alignments es laut Wikipedia geben kann
-		\item für jedes alignment werden drei first order features berechnet und für zwei dieser auch higher order features\\
-		(Jonathan)
-		\begin{itemize}
-			\item link score: wie wichtig das Mention ist (gleich für alle Alignments)
-			\item entity score: wie wahrscheinlich dieses Alignment in der Wikipedia ist
-			\item context score: wie ähnlich der Kontext der Mention und die Wikipedia Seite des Alignments sind
-		\end{itemize}
-		\item kurze higher order feature Erläuterung (Jonathan)
-		\item klassifizieren jedes Alignment
-		\item wenn für ein Mention mehrere Alignments als wahr klassifiziert wurden, werfen wir die Mentions weg, da wir nicht wissen welches Alignments korrekt ist
-	\end{itemize}
+The process of annotating newspaper articles is very similar to the training process. Given an article D, the first task is to find possible mentions of businesses. This is done with the trie built using $A_{business}$. These trie aliases are again filtered by removing stop words and symbols since they are assumed to almost never reference a business. As just described a number of feature entries are then generated from every trie alias found in article D. They are then classified using the trained classification model. Because one trie alias generates multiple feature entries which are classified independently it is possible that multiple feature entries generated from one trie alias are classified as links to businesses. When this happens there is no way to rank the multiple possible entities since the classifier just does a boolean decision. Because of that these collisions are filtered and the alias is not linked to any entity. %These cases will be included in the evaluation of the classification models and features in the following sections.
+	% \begin{itemize}
+	% 	\item finden mögliche Aliase einer Entität über die Wikipedialinks (Wikipedia = Knowledge Base)
+	% 	\item filtern Wikipedia Entitäten anhand der Wikidata Ontologie auf Unternehmen
+	% 	\item suchen nach allen Vorkommen aller Aliase/Mentions dieser Unternehmen in Fließtexten anhand eines Prefix-Trees (Trie)\\
+	% 	(Trie eventuell noch genauer erläutern?)
+	% 	\item entfernen Stopwords und Symbole
+	% 	\item für jedes Mention gucken wir uns an welche Alignments es laut Wikipedia geben kann
+	% 	\item für jedes alignment werden drei first order features berechnet und für zwei dieser auch higher order features\\
+	% 	(Jonathan)
+	% 	\begin{itemize}
+	% 		\item link score: wie wichtig das Mention ist (gleich für alle Alignments)
+	% 		\item entity score: wie wahrscheinlich dieses Alignment in der Wikipedia ist
+	% 		\item context score: wie ähnlich der Kontext der Mention und die Wikipedia Seite des Alignments sind
+	% 	\end{itemize}
+	% 	\item kurze higher order feature Erläuterung (Jonathan)
+	% 	\item klassifizieren jedes Alignment
+	% 	\item wenn für ein Mention mehrere Alignments als wahr klassifiziert wurden, werfen wir die Mentions weg, da wir nicht wissen welches Alignments korrekt ist
+	% \end{itemize}
