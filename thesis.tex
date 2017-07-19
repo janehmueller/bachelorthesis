@@ -1,16 +1,19 @@
 \documentclass[a4paper, titlepage, parskip]{scrartcl} 
-% Format A4, mit Titelseite, mit Durchschuss (= Abstand zwischen Absätzen, statt Einrückung)
-% KOMA-Script Grundklasse     texdoc scrguide
+% A4 format, with title page, with newline between paragraphs (instead of indentation)
+% KOMA-Script base class     texdoc scrguide
 
-% Englisch mit Schriftkodierung mit Umlauten
+% use english and display UTF-8 symbols
 \usepackage[USenglish]{babel}
 \usepackage[T1]{fontenc}
 
-% Mathematische Symbole etc.
+% use UTF-8 encoding for input files
+\usepackage[utf8]{inputenc}
+
+% mathematical symbols, etc.
 \usepackage{textcomp,amsmath,amssymb}
 \newcommand\abs[1]{\left|#1\right|}
 
-% Standard Graphik Paket
+% default graphics package
 \usepackage{graphicx}
 
 % add unnumbered sections to toc
@@ -19,10 +22,7 @@
 % adds floating figure environments
 \usepackage{float}
 
-% kann UTF-8 source lesen
-\usepackage[utf8]{inputenc}
-
-% Definition environment
+% adds definition environment
 \usepackage{amsthm} 
 \theoremstyle{plain}
 \newtheorem{definition}{Definition}
@@ -39,9 +39,8 @@
 
 % bibtex
 \usepackage{url}
-\bibliographystyle{plaindin}      % BibTeX Styles nach Norm DIN 1505
 
-% Abstract Breite
+% abstract width
 % https://tex.stackexchange.com/questions/151583/how-to-adjust-the-width-of-abstract
 \renewenvironment{abstract}[1]
  {\small
@@ -55,7 +54,7 @@
   \item\relax}
  {\endlist}
 
-% Unterschriftzeile
+% signature line
 % https://tex.stackexchange.com/questions/183698/signature-line-with-dots-and-name-below
 \newcommand{\sign}[1]{
   \begin{tabular}[t]{@{}l@{}}
@@ -64,14 +63,14 @@
   \end{tabular}
 }
 
-% Titelseite
+% title page
 \titlehead{
 \includegraphics{img/hpi_logo_cmyk_wb_sl2}
 } \subject{Bachelor Thesis}
 \title{Evaluation of Entity Linking Models on Business Data
 \\ \bigskip 
 \large{Evaluierung von Entitätsverknüpfungsmodellen auf Unternehmensdaten}}
-\author{Jan Ehmüller\\{\small{\url{jan@ehmueller.de}}}}
+\author{Jan Ehmüller\\{\small{\href{mailto:jan@ehmueller.de}{\nolinkurl{jan@ehmueller.de}}}}}
 \date{\today}
 \publishers{
 Information Systems Group\\
