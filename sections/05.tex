@@ -1,7 +1,7 @@
 % (3-5 Seiten)
 \section{Feature Evaluation}
 \label{sec:FeatureEval}
-This section evaluates the first and higher order features, which were described in Section \ref{sec:NEL}. The quality measures used to evaluate the features are again Precision $P$, Recall $R$ and the $F_{\beta}$-Score. Specifically, the $F_1$-Score is used, which is the harmonic mean of the Precision and the Recall and thus favors neither. The following sections will evaluate first the first order features, then the addition of all higher order features and finally every single higher order feature. Of these evaluations, the first and last ones are done with the leave-one-out strategy to avoid a time-consuming exhaustive grid search. In the case of the first order features, there is also no other way to evaluate the link score since it is equal for all feature entries generated from a single alias. The tests were done using a Random Forest classifier, which was trained as described in Section \ref{sec:ModelEval}. It was trained using these parameters: a maximum tree depth of 6, a maximum number of bins of 40 and with 20 trees.
+This section evaluates the first and higher order features, which were described in Section \ref{sec:NEL}. The quality measures used are again Precision, Recall and $F_1$-Score, which were defined in Definition \ref{def_prf} and used in Section \ref{sec:ModelEval}. The following sections will evaluate first the first order features, then the addition of all higher order features and finally every single higher order feature of the context score. Of these evaluations, the first and last ones are done with the leave-one-out strategy to avoid a time-consuming exhaustive grid search. In the case of the first order features, there is also no other way to evaluate the link score since it is equal for all feature entries generated from a single alias. The tests were done using a Random Forest classifier, which was trained as described in Section \ref{sec:ModelEval}. It was trained with the same parameters that were used in Section \ref{sec:ModelEval}: a maximum tree depth of 6, a maximum number of bins of 40 and with 20 trees.\par
 % \begin{itemize}
 % 	\item mit welchem Classifier getestet
 % 	\item Parameter des Classifiers auch erwähnen
@@ -12,92 +12,87 @@ This section evaluates the first and higher order features, which were described
 % \end{itemize}
 
 \subsection{First Order Features}
+The first order features are, as described in Section \ref{sec:NEL}, the link score, entity score and context score. Figure \ref{fo_eval} shows a leave-one-out evaluation of these features. Each group of bars, which show Precision, Recall and $F_1$-Score, shows the quality of a model trained using the specified first order features. The model trained with all first order features is used to evaluate the other three models by comparing them to it. The other three models were trained using only two of the first order features.\par
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{img/first_order_eval}
+	\includegraphics[width=0.9\textwidth]{img/first_order_eval}
 	\caption{Leave-one-out evaluation of the first order features.}
 	\label{fo_eval}
 \end{figure}
-\begin{itemize}
-	\item short description of first order features
-	\item kurz beschreiben was man sieht (und alle first order als control group)
-	\item link score:\\
-		minimaler Precision drop und starker Recall drop\\
-		variiert nicht bei den feature entries die für einen eintrag generiert wurden\\
-		sagt hauptsächlich aus, ob dieser alias relevant ist oder nicht\\
-		entsprechent fehlt bei manchen feature entries die aussage, dass dieses wort trotzdem wichtig ist\\
-		deswegen wird es einfach nicht verlinkt (erklärt recall) anstatt auf die falsche entitaet zu verlinken (deswegen kaum precision drop)
-	\item entity score:\\
-		sichtbar dass wichtigstes feature überhaupt\\
-		extrem starker recall abfall\\
-		hat als feature den größten wertebereich (range)\\
-		link score ist konstant für alle feature entries von einem alias\\
-		context score hat relativ geringen wertebereich\\
-		entsprechend sind viele aliase auch einfach gar nicht verlinkt, da der context score alleine nicht viel aussagt\\
-		precision drop ist wieder minimal
-	\item context score
-		precision fällt auch minimal und recall ändert sich nicht\\
-		dieses feature ist vor allem für die disambiguierung in nicht sicheren fällen\\
-		entsprechend beeinflusst es vor allem die precision und erhöht die rate des richtigen disambiguierens
-	\item abschließend die Rollen der Features dadurch validieren
-\end{itemize}
+The model without the link score has only $2\%$ less Precision and $14\%$ less Recall compared to the model with all first order features. This shows that, as intended, the link score mainly signifies whether or not the alias of a specific feature is an important word. The drop in the Precision is so small because the link score can't be used to disambiguate between multiple entities one alias could link to since it is the same for all feature entries generated for one link or trie alias.\par
+%In the case that all feature entries generated for an alias have small entity scores and a small cosine similarities, which are as described by Janetzki \ref{janetzki} generally small, a missing link score can lead to all feature entries being classified as negatives.
+The removal of the entity score causes, compared to the model with all features, a small Precision drop as well. The Recall drop is a lot larger with $31\%$. Because the Recall is only at $24\%$ it is not surprising that the Precision drop is only relatively small. The small Recall signifies that only the obvious feature entries were classified as positives. An example for such an obvious feature entry would be the alias \itcite{Commerzbank AG}. This alias occurred 125 times, of which 93 were as link, and every time it was linked it linked to the page \itcite{Commerzbank}. Therefore, only one feature entry is generated for the alias and it has a high link score of $0.744$, meaning that its very likely to be classified as positive. The large drop of the Recall shows that the entity score is the most important feature, doing most of the disambiguation and thus entity linking. Since all the feature entries for the same alias have the same link score only the context score would disambiguate the entities. But, as Janetzki \cite{janetzki} showed, the range of the context score is relatively small, while the range of entity score is very large. The small range of the context score results in a very difficult disambiguation between multiple feature entries if it is the only features used to do so.\par
+The last model has very similar statistics compared to the model with all features. The small Precision drop shows that the context score is used to disambiguate between feature entries of an alias with multiple very likely entities. An example would be the alias \itcite{BVB}. Out of the 340 times it is linked in the Wikipedia, it links 107 times to the \itcite{Basler Verkehrs-Betriebe} and 208 times to \itcite{Borussia Dortmund}. This means that the entity scores are relatively similar while the context scores will most likely differ due to the entities appearing in very different contexts. E.g. \itcite{Basler Verkehrs-Betriebe} is most likely meant if the context of the alias is about traffic appear and \itcite{Borussia Dortmund} is most likely meant if the context is about soccer.\par
+% This evaluation shows that all of the first order features improve the classification result and do that in the intended way.
+% \begin{itemize}
+% 	\item short description of first order features
+% 	\item kurz beschreiben was man sieht (und alle first order als control group)
+% 	\item link score:\\
+% 		minimaler Precision drop und starker Recall drop\\
+% 		variiert nicht bei den feature entries die für einen eintrag generiert wurden\\
+% 		sagt hauptsächlich aus, ob dieser alias relevant ist oder nicht\\
+% 		entsprechent fehlt bei manchen feature entries die aussage, dass dieses wort trotzdem wichtig ist\\
+% 		deswegen wird es einfach nicht verlinkt (erklärt recall) anstatt auf die falsche entitaet zu verlinken (deswegen kaum precision drop)
+% 	\item entity score:\\
+% 		sichtbar dass wichtigstes feature überhaupt\\
+% 		extrem starker recall abfall\\
+% 		hat als feature den größten wertebereich (range)\\
+% 		link score ist konstant für alle feature entries von einem alias\\
+% 		context score hat relativ geringen wertebereich\\
+% 		entsprechend sind viele aliase auch einfach gar nicht verlinkt, da der context score alleine nicht viel aussagt\\
+% 		precision drop ist wieder minimal
+% 	\item context score
+% 		precision fällt auch minimal und recall ändert sich nicht\\
+% 		dieses feature ist vor allem für die disambiguierung in nicht sicheren fällen\\
+% 		entsprechend beeinflusst es vor allem die precision und erhöht die rate des richtigen disambiguierens
+% 	\item abschließend die Rollen der Features dadurch validieren
+% \end{itemize}
 
 \subsection{Higher Order Features}
+The higher order features, which were described in Section \ref{sec:NEL}, are the rank, $\Delta top$ and $\Delta succ$. They are added to the entity score and the context score since they show the relationship between the feature entries generated from a single link or trie alias. Figure \ref{ho_eval_gen} shows the quality of four classification models. The first model was trained using only the first order features. The next two were trained with the higher order features for only a single feature. The last model was trained with the higher order features for both the entity and the context score.\par
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{img/higher_order_eval}
+	\includegraphics[width=0.9\textwidth]{img/higher_order_eval}
 	\caption{Evaluation of the higher order features.}
 	\label{ho_eval_gen}
 \end{figure}
-\begin{itemize}
-	\item kurz higher order features beschreiben
-	\item kurz beschreiben was man sieht (und alle first order als control group)
-	\item entity score higher order features\\
-		minimale Verbesserung in Precision, die im Bild durch runden nicht zu sehen sind\\
-		Recall fällt etwas\\
-		nur kleine Änderungen, da der entity score alleine schon sehr Aussagekräftig ist\\
-		higher order features helfen vor allem den Kontext zu den anderen Einträgen des gleichen alias darzustellen\\
-		der ist oft durch den entity score selber auch schon gegeben
-	\item context score higher order features\\
-		Verbesserung der Precision ohne Fall des Recalls\\
-		wieder: higher order features helfen vor allem den Kontext zu den anderen Einträgen des gleichen alias darzustellen\\
-		bei context score hilft das wegen der relativ kleinen Werte und dem geringen Wertebereich eine vergleichsweise niedrige Zahl als wichtig einzustufen\\
-		dadurch bessere disambiguierung
-	\item beide higher order features\\
-		erhöhen precision durch bessere disambiguierung\\
-		verringern recall auch nur minimal\\
-		der classifier wird etwas vorsichtiger, da z.B. bei 2 Kandidaten mit ähnlichen entity scores der classifier keinen nimmt weil der unterschied zu gering ist
-	\item abschließend sagen dass die higher order features einen Leistungsanstieg bringen, dieser aber nur minimal ist
-\end{itemize}
-
+Adding the higher order features to the entity score did not improve the model by a lot. The Precision improved by only $0.7\%$, which is not visible in Figure \ref{ho_eval_gen} due to rounding, and the recall dropped by a per cent. This demonstrates that since the entity score itself already has a very large impact on the model the higher order features did not do so and made the model only a little more cautious. The relationship between the entity scores is in most cases already shown by the score itself explaining the small impact of the higher order features.\par
+Adding the higher order features to the context score improves the Precision by $2\%$ while dropping the Recall only by $0.5\%$. The drop of the Recall is again not visible due to rounding. This displays that adding the higher order features to the context score further improves the disambiguation with minimal impact on the Recall. The higher order features have a higher impact on the context score compared to the entity score because as previously said the value range for the context score is relatively small. This causes the higher order features to bring the small values into perspective, i.e. the rank tells the classifier that a value is the best value even though it is small. The disambiguation is improved as feature entries with otherwise high scores might have the worst similarity of the words appearing around the alias and the linked entities page. The resulting context score is small and it has a bad rank and large $\Delta top$. Previously the difference of the context score might not have been large enough to matter but now the rank easily shows that the feature entry is a bad candidate.\par
+The last model used the higher order features for both the entity and the context score. The improvement of the Precision compared to the model with the higher order features for the context score shows that the higher order features for the entity score indeed improved the Precision by a small amount. Likewise, the drop of the Recall compared to the model with the higher order features for the entity score shows that the higher order features for the context score dropped the Recall by a small amount. Overall the Precision is increased by $3\%$ compared to the model without higher order features. The Recall dropped by only $2\%$. This shows that while the higher order features did help improve the classifier they did so only by a small amount unlike the improvement seen by Grütze et al. \cite{coheel}.\par
+% \begin{itemize}
+% 	\item kurz higher order features beschreiben
+% 	\item kurz beschreiben was man sieht (und alle first order als control group)
+% 	\item entity score higher order features\\
+% 		minimale Verbesserung in Precision, die im Bild durch runden nicht zu sehen sind\\
+% 		Recall fällt etwas\\
+% 		nur kleine Änderungen, da der entity score alleine schon sehr Aussagekräftig ist\\
+% 		higher order features helfen vor allem den Kontext zu den anderen Einträgen des gleichen alias darzustellen\\
+% 		der ist oft durch den entity score selber auch schon gegeben
+% 	\item context score higher order features\\
+% 		Verbesserung der Precision ohne Fall des Recalls\\
+% 		wieder: higher order features helfen vor allem den Kontext zu den anderen Einträgen des gleichen alias darzustellen\\
+% 		bei context score hilft das wegen der relativ kleinen Werte und dem geringen Wertebereich eine vergleichsweise niedrige Zahl als wichtig einzustufen\\
+% 		dadurch bessere disambiguierung
+% 	\item beide higher order features\\
+% 		erhöhen precision durch bessere disambiguierung\\
+% 		verringern recall auch nur minimal\\
+% 		der classifier wird etwas vorsichtiger, da z.B. bei 2 Kandidaten mit ähnlichen entity scores der classifier keinen nimmt weil der unterschied zu gering ist
+% 	\item abschließend sagen dass die higher order features einen Leistungsanstieg bringen, dieser aber nur minimal ist
+% \end{itemize}
+% \subsection{Context Score's Higher Order Features}
+The impact of each higher order feature on the entity score is not shown since it is minimal, which is demonstrated by the generally small impact of the entity score's higher order features. The context score's higher order features are evaluated using a leave-one-out evaluation. Figure \ref{ho_eval_context} shows the quality of four models. The first one was trained with all first and higher order features and will be used for comparison. The next three models show a model without the described higher order feature.\par
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{img/higher_order_eval_entity}
-	\caption{Leave-one-out evaluation of the entity score's higher order features.}
-	\label{ho_eval_entity}
-\end{figure}
-\begin{itemize}
-	\item kurz beschreiben was man sieht (und alle first und higher order als control group)
-\end{itemize}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth]{img/higher_order_eval_context}
+	\includegraphics[width=0.9\textwidth]{img/higher_order_eval_context}
 	\caption{Leave-one-out evaluation of the context score's higher order features.}
 	\label{ho_eval_context}
 \end{figure}
-\begin{itemize}
-	\item kurz beschreiben was man sieht (und alle first und higher order als control group)
-\end{itemize}
+The removal of any higher order feature drops the Precision by $2-3\%$ and increases the Recall by $3\%$. While not visible, the largest impact has $\Delta succ$. Its removal drops the Precision by $0.3\%$ more than the removal of $\Delta top$. This evaluation demonstrates that the higher order features work best when using all of them together, an observation Grütze et al. \cite{coheel} made as well.
 
 
-
-
-
-
-
-
-
-
-
-
+% \begin{figure}[H]
+% 	\centering
+% 	\includegraphics[width=0.9\textwidth]{img/higher_order_eval_entity}
+% 	\caption{Leave-one-out evaluation of the entity score's higher order features.}
+% 	\label{ho_eval_entity}
+% \end{figure}
