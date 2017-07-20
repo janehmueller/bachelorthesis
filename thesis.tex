@@ -22,6 +22,13 @@
 % adds floating figure environments
 \usepackage{float}
 
+% decrease whitespace around sections
+\usepackage{titlesec}
+\titlespacing\subsection{0pt}{4pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+
+% change the margins
+\usepackage[top=1.5in, bottom=1.5in, left=1.2in, right=1.2in]{geometry}
+
 % adds definition environment
 \usepackage{amsthm} 
 \theoremstyle{plain}
@@ -69,7 +76,7 @@
 } \subject{Bachelor Thesis}
 \title{Evaluation of Entity Linking Models on Business Data
 \\ \bigskip 
-\large{Evaluierung von Modellen für die Entitätsverknüpfung auf Unternehmensdaten}}
+\large{Evaluierung von Modellen für die Entitätsverknüpfung von Unternehmensdaten}}
 \author{Jan Ehmüller\\{\small{\href{mailto:jan@ehmueller.de}{\nolinkurl{jan@ehmueller.de}}}}}
 \date{\today}
 \publishers{

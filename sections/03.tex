@@ -1,4 +1,4 @@
-% (2-3 Seiten)
+% (3-4 Seiten)
 \section{Named Entity Linking}
 \label{sec:NEL}
 This section describes the classification problem combining both NER and NEL and its solution. Given an input text, all mentions of businesses should be recognized and linked to the correct business while other mentions of named entities should be ignored. Quote \ref{quote1} shows two example sentences about automobile businesses. Only the bold named entities are businesses and should be linked to entities in the knowledge base. Usual NER approaches however (needs citation) recognize all named entities, which in this example are businesses as well as non-businesses. Since the linked entities are used to extract relationships between businesses they must only be businesses. To solve this problem a classifier is trained using the German Wikipedia and its hand annotated links as knowledge base. The following sections describe the how the classifier is trained and how it is then used to annotate documents.\\
