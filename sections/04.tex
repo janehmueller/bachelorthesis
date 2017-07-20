@@ -40,7 +40,7 @@ It is visible that a low threshold results in a very high precision with a relat
 Adjusting the thresholds produces indeed a high Precision and a high Recall classifier, which in the future can be used to create the high-quality seed and high-coverage candidate alignments presented by Grütze et al. \cite{coheel}. The candidate alignments would be used to increase the Recall of the seed alignments, e.g. by using Random Walks.\par
 
 \subsection{Comparison with realistic Quality Measure}
-The adjusted quality measures take the collisions described in Section \ref{sec:NEL} into account. These are an adjusted Precision and an adjusted Recall. They are calculate the same way the normal Precision and Recall are calculated but use different sets for the calculation.\par
+The adjusted quality measures take the collisions described in Section \ref{sec:NEL} into account. These are an adjusted Precision and an adjusted Recall. They are calculated the same way the normal Precision and Recall are calculated but use different sets for the calculation.\par
 Let the set $U \subset T$ contain all feature entries, which were the only ones classified as positive for its alias, i.e. there is no collision. $U$ is then used to remove all feature entries with collisions. Let $T'_{TP} = T_{TP} \cap U$ and $T'_{FP} = T_{FP} \cap U$. The feature entries producing collisions are then added to $T_{FN}$: $T'_{FN} = T_{FN} \cup (T_{TP} - U) \cup (T_{FP} - U)$. The sets $T'_{TP}$, $T'_{FP}$ and $T'_{FN}$ are then used to calculate Precision, Recall and $F_1$-Score.\par
 \begin{figure}[H]
 	\centering
