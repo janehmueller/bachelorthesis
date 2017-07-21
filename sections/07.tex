@@ -4,19 +4,4 @@
 We presented an approach that combines both NER and EL and performs both in an efficient way. It is a practical solution as it is possible to annotate millions of documents in an acceptable amount of time. It annotated 3.6 million German Wikipedia articles in only 27 hours. With such a performance it is possible to annotate newly published newspaper articles in real-time. That way it is possible to extract relations from these annotated documents in real time and keep the knowledge base up to date.\par
 We used Apache Spark on an eight node cluster, as described in Section \ref{sec:NELEval}, to annotate the documents on a distributed system. Apache Spark scales horizontally, which means that to increase the performance only new nodes need to be added to the cluster. This is a very cost efficient way to scale since the nodes don't need top of the line hardware.\par
 The combined NER and EL achieves a high Precision of $90\%$. The Recall can be increased to $80\%$ if required at the cost of some Precision. This is achieved by adjusting the class thresholds of the classification model as described in Section \ref{sec:ModelEval}. These Precision and Recall values contain both NER and EL, which are both not easily solved. Additionally, the presented approach annotates unstructured German texts, which are harder to annotate due to the German language being more complex than English.\par
-There are a few ways to improve the performance and the quality of the presented approach. One way to increase the performance would be to decrease the memory footprint of the documents by using more memory efficient ways to encode them. This would increase the scalability of the feature generation, which takes up most of the time. The quality of the classification could be increased by combining a high Precision and a high Recall model as proposed by Grütze et al. \cite{coheel}. The current approach can be used to create both a high Precision and high Recall classifier by adjusting the class thresholds. These could then be combined by using e.g. Random Walks to increase the Recall of the high Precision classifier without hurting the Recall.
-
-	% \subsection*{Achievements}
-	% \begin{itemize}
-	% 	\item sind die neuen Links benutzbar
-	% 	\item eine Statisik der verlinkten Artikel vielleicht
-	% 	\item können aus den getaggten Artikel Relationen extrahiert werden
-	% 	\item können Millionen von Artikeln in Stunden verlinken (auch in CohEEL erwähnt)
-	% \end{itemize}
-
-	% \subsection*{Possible Improvements}
-	% \begin{itemize}
-	% 	\item verbessern der Links durch die in CohEEL benutzen Random Walks mit den Candidate Alignments
-	% 	\item Blacklist Trie um schlechte/falsche Mentions zu verhindern
-	% \end{itemize}
-
+There are a few ways to improve the performance and the quality of the presented approach. One way to increase the performance would be to decrease the memory footprint of the documents by using more memory efficient ways to encode them. This would increase the scalability of the feature generation, which takes up most of the time. The quality of the classification could be increased by combining a high Precision and a high Recall model as proposed by Grütze et al. \cite{coheel}. The current approach can be used to create both a high Precision and high Recall classifier by adjusting the class thresholds. These could then be combined by, e.g., using Random Walks to increase the Recall of the high Precision classifier without hurting the Recall.

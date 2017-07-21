@@ -1,28 +1,6 @@
 % (1 Seite)
 \section{Related Work}
 \label{sec:RelatedWork}
-Both Named Entity Recognition and Entity Linking are widely known and researched problems. Recognizing businesses in texts was one of the first research topics for NER according to Nadeau et al. \cite{ner-sekine2007}. This approach by Rau \cite{rau91} uses rules and heuristics to recognize businesses in texts. Mikheev et al. \cite{Mikheev:1999:NER:977035.977037} use a similar approach, also using rules and heuristics and not needing gazetteers, but did not restrict themselves to only recognizing businesses. Ritter et al. \cite{Ritter:2011:NER:2145432.2145595} recognize named entities in Tweets by using part-of-speech tagging, chunking, and finally named-entity recognition. Brauer et al. \cite{Brauer:2008:MEE:1458550.1458566} also recognize and associate entities in unstructured data with those in structured data. They do so by disambiguating mappings of entities in the text to entities of structured data by exploiting relationships from the structured data and the documents' structure. Approaches to NER in the German language are e.g. done by Blessing et al. \cite{Blessing:2007:TCM:1316948.1316956}, who recognize and ground German geographic proper names by using a three-step model consisting of spotting, typing and referencing. There are also approaches for NER on businesses in German texts. One such approach by Loster et al. \cite{Michael2017a} uses various dictionaries, regular expressions and text contexts to recognize businesses.\par
+Both Named Entity Recognition and Entity Linking are widely known and researched problems. Recognizing businesses in texts was one of the first research topics for NER according to Nadeau et al. \cite{ner-sekine2007}. This approach by Rau \cite{rau91} uses rules and heuristics to recognize businesses in texts. Mikheev et al. \cite{Mikheev:1999:NER:977035.977037} use a similar approach, also using rules and heuristics and not needing gazetteers, but did not restrict themselves to only recognizing businesses. Ritter et al. \cite{Ritter:2011:NER:2145432.2145595} recognize named entities in Tweets by using part-of-speech tagging, chunking, and finally named-entity recognition. Brauer et al. \cite{Brauer:2008:MEE:1458550.1458566} also recognize and associate entities in unstructured data with those in structured data. They do so by disambiguating mappings of entities in the text to entities of structured data by exploiting relationships from the structured data and the documents' structure. Approaches to NER in the German language are, e.g., done by Blessing et al. \cite{Blessing:2007:TCM:1316948.1316956}, who recognize and ground German geographic proper names by using a three-step model consisting of spotting, typing and referencing. There are also approaches for NER on businesses in German texts. One such approach by Loster et al. \cite{Michael2017a} uses various dictionaries, regular expressions and text contexts to recognize businesses.\par
 There are also many research efforts solving Entity Linking in various ways. Some combine the EL with the NER while others assume that the entities were already recognized and tagged. Sil et al. \cite{Sil:2013:RJN:2505515.2505601} present an approach that combines EL with NER by combining candidate mentions from NER systems and candidate entity links from EL systems and making joint predictions. Grütze et al. \cite{coheel} propose a system that does only the EL task and assumes the NER to be already done. Their focus lies on the reliability and performance of the Entity Linking, similar to the approach this thesis proposes. They use a distributed system with Apache Flink to annotate millions of documents in an acceptable amount of time. They also focus on the Precision of their EL and improve the Recall by using a second classifier with a high Recall and combining the candidates of both with Random Walks.
 
-
-
-% Einmal Paper zu NER citen und kurz sagen was sie machen und dann auch zu NEL (u.a. CohEEL). Dann sagen was wir anders machen.
-
-
-% 	\subsection*{Alias Generation to Improve Company Recognition in Text}
-% 	\begin{itemize}
-% 		\item ähnliches Ziel (NEL von Unternehmen)
-% 		\item arbeitet mit dem "Wortstamm" der Aliase
-% 		\item kann so auch nicht bekannte Vorkommen eines Unternehmensaliases finden
-% 		\item dadurch ist Disambiguierung aber schwieriger, da z.B. Unternehmensformen aus dem Namen entfernt werden
-% 		\item (eventuell gab es keine Disambiguierung?)
-% 	\end{itemize}
-
-% 	\subsection*{CohEEL}
-% 	\begin{itemize}
-% 		\item nur NEL und kein NER
-% 		\item benutzt Seed und Candidate Alignments und kombiniert diese mit JNE (und Random Walks)
-% 		\item benutzt sehr ähnliche first order features
-% 		\item benutzt die selben higher order features
-% 		\item läuft auch verteilt (Flink)
-% 	\end{itemize}
