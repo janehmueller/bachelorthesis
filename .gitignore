@@ -222,5 +222,3 @@ TSWLatexianTemp*
 # macOS files
 .DS_Store
 
-# built pdf
-thesis.pdf
