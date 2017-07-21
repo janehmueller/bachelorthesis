@@ -1,12 +1,12 @@
 % (4 Seiten)
-\section{Evaluation of the Classification Models}
+\section{Evaluation of Classification Models}
 \label{sec:ModelEval}
 This section first evaluates different classification models with three quality measures. These are the precision $P$, the recall $R$ and the $F_{\beta}$-score, which are defined in Definition \ref{def_prf}. Specifically, the $F_1$-score is used, which is the harmonic mean of the precision and the recall and thus favors neither. Then the class thresholds of a Random Forest model are evaluated to see whether or not they can be used to create both a high precision and a high recall model to create seed and candidate alignments as described by Grütze et al.\ \cite{coheel}. Finally, this section compares the just introduced quality measures with adjusted quality measures that take the collisions described in the previous section into account. These adjusted quality measures are more realistic for the use case of this approach since the collisions are thrown away.\par
 Let $T$ be the set containing the feature entries to be classified. Each feature entry has a label containing the result (positive or negative) the classifier should predict. A positive label on a feature entry means that its alias links to its entity and that it should be classified as such. A negative label means that the feature entry should not be classified as a link because either it's not a link at all or it links to the wrong entity. The subsets $T_{TP}$, $T_{FP}$ and $T_{FN}$, which are used to calculate the quality measures, are defined as follows.\\
 \begin{nscenter}
-	$T_{TP} \subset T$, where $\forall fe \in T_{TP}: fe$ is labeled positive $\land$ $fe$ is classified positive\\
-	$T_{FP} \subset T$, where $\forall fe \in T_{FP}: fe$ is labeled negative $\land$ $fe$ is classified positive\\
-	$T_{FN} \subset T$, where $\forall fe \in T_{FN}: fe$ is labeled positive $\land$ $fe$ is classified negative\\
+	$T_{TP} \subset T$, where $\forall y \in T_{TP}: y$ is labeled positive $\land$ $y$ is classified positive\\
+	$T_{FP} \subset T$, where $\forall y \in T_{FP}: y$ is labeled negative $\land$ $y$ is classified positive\\
+	$T_{FN} \subset T$, where $\forall y \in T_{FN}: y$ is labeled positive $\land$ $y$ is classified negative\\
 \end{nscenter}
 \begin{definition}
 $P = \frac{\abs{T_{TP}}}{\abs{T_{TP} \ \cup \ T_{FP}}}$
@@ -26,7 +26,7 @@ Most models have class thresholds as parameters as well. With these, a class can
 	\label{classifier_eval}
 \end{figure}
 The Naive Bayes and Logistic Regression were both tested with different thresholds for the classes. They were especially tested with thresholds heavily favoring the positive class to see whether or not they would classify anything as positive. Unfortunately, this did not result in a different classification result.\par
-The same parameters concerning the Decision Trees were used for the Gradient Boosted Trees and the Random Forest. These were 20 trees, a maximum depth of 6 and a maximum of 40 bins. The Gradient Boosted Trees were tested with a few different number of iterations. The values displayed in Figure \ref{classifier_eval} were the best for the tested number of iterations, which were 20. The other values resulted in a minimally worse precision. The number of trees, the maximum depth and the maximum number of bins were tested using a Random Forest, but none of these parameters changed anything significantly.\par
+The same parameters concerning the Decision Trees were used for the Gradient Boosted Trees and the Random Forest. These were 20 trees, a maximum depth of 6 and a maximum of 40 bins. The Gradient Boosted Trees were tested with a few different number of iterations. The values displayed in Figure \ref{classifier_eval} were the best for the tested number of iterations, which were 20 iterations. The other values resulted in a minimally worse precision. The number of trees, the maximum depth and the maximum number of bins were tested using a Random Forest, but none of these parameters changed anything significantly.\par
 
 \subsection{Class Threshold Evaluation}
 The class thresholds can be, as previously described, used to favor one class over the other. Since the Spark MLlib does not provide a way to change the class thresholds or the loss function for Gradient Boosted Trees the evaluation of the class thresholds is done only with a Random Forest. Figure \ref{rf_thresh_large} shows the behavior of the quality measures with a different threshold. A threshold $> 1$ means that the class positive is favored and a threshold $< 1$ means that the class negative is favored. The relative distance signifies how strong a class is favored, i.e., a threshold of $0.5$ favors the class negative as much as a threshold of $2.0$ favors the class positive.\par
