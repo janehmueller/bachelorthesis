@@ -3,11 +3,11 @@
 \label{sec:NEL}
 This section describes the classification problem combining both NER and NEL and its solution. Given an input text, all mentions of businesses should be recognized and linked to the correct business while other mentions of named entities should be ignored. Quote \ref{quote1} shows two example sentences about automobile businesses. Only the bold named entities are businesses and should be linked to entities in the knowledge base. The underlined entities are also named entities but not businesses. In this case, they are persons, but they could be organizations, like the EU, as well. Since the entities are used to extract relationships between businesses, the non-business entities must be filtered in some way. Finally, the business entities must be linked to entities in the knowledge base. To solve this problem, a classifier is trained using the German Wikipedia and its hand annotated links as knowledge base. This section first describes how the classifier, which solves the combined NER and EL problem, is trained and then explains documents are annotated.\\
 \begin{nscenter}
-    \fbox{\parbox[c][74pt]{\textwidth}{Sechs Top-Manager von \textbf{GM}, darunter \underline{Robert A. Lutz} sowie \underline{Carl-Peter Forster}, welcher als Group Vice President für das Europageschäft zuständig ist, trennten sich Anfang Mai 2009 von ihren gesamten Anteilsscheinen.\\PSA-Chef \underline{Carlos Tavares} hatte zugesagt, \textbf{Opel} als deutsches Unternehmen zu erhalten. Er hatte aber zugleich angekündigt, \textbf{Opel} müsse sich im Fall einer Übernahme durch \textbf{PSA} weitgehend aus eigener Kraft sanieren.}}
-    \begin{quotecaption}
-    Two example sentences containing highlighted named entities. Business entities are bold and other non-business entities are underlined.
-    \label{quote1}
-    \end{quotecaption}
+	\fbox{\parbox[c][74pt]{\textwidth}{Sechs Top-Manager von \textbf{GM}, darunter \underline{Robert A. Lutz} sowie \underline{Carl-Peter Forster}, welcher als Group Vice President für das Europageschäft zuständig ist, trennten sich Anfang Mai 2009 von ihren gesamten Anteilsscheinen.\\PSA-Chef \underline{Carlos Tavares} hatte zugesagt, \textbf{Opel} als deutsches Unternehmen zu erhalten. Er hatte aber zugleich angekündigt, \textbf{Opel} müsse sich im Fall einer Übernahme durch \textbf{PSA} weitgehend aus eigener Kraft sanieren.}}
+	\begin{quotecaption}
+	Two example sentences containing highlighted named entities. Business entities are bold and other non-business entities are underlined.
+	\label{quote1}
+	\end{quotecaption}
 \end{nscenter}
 
 \subsection{Classifier Training}
